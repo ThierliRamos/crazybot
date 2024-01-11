@@ -241,9 +241,59 @@ async function connectToWhatsApp() {
         if(!fromMe && isGroup) {
           console.log(`\n\nMensagem no grupo ${from} de ${repla(jid)}\n\nMensagem: ${body}\n\n############`)
         }
+        
+async function formatNumber(){
+  try {
+  var nuns = fs.readFileSync("./numeros.txt").toString()
+  nuns = nuns.split("\n")
+  var nunsF = []
+  for (let um of nuns) {
+    format = um.replaceAll(" ","").replaceAll("-","").replaceAll("+","").replaceAll("\r", "")+"@s.whatsapp.net"
+    nunsF.push(format)
+    //console.log(format)
+  }
+  //console.log(nunsF)
+  return nunsF
+ } catch(e) {
+   console.log(e)
+   return []
+ }
+}
 
+async function massa(texto, njid, de) {
+       try {
+         await client.sendMessage(njid, {text: "⌛️ Enviando suas mensagens..."})
+         numbers = await formatNumber()
+         console.log(numbers)
+         console.log(texto)
+         if(numbers.length < 1) {
+           await client.sendMessage(njid, {text: "Nenhum número no arquivo numeros.txt ou algo está errado, veja os logs"})
+           return
+         }
+         await client.sendMessage(njid, {text: "📝 Veja os logs para acompanhar"})
+         await delay(2000)
+         for (let i = 0; i < numbers.length; i++) {
+           await client.sendMessage(numbers[i], {image: {url: "./thierli.jpg"}, mimetype: "image/jpeg", caption: "Neste ano de 2024 começa a corrida para elegermos prefeito(a) e vereadores que irão se comprometer a buscarem soluções e respostas à sociedade por 4 anos!\n\n⚠️ Eu, Thierli Ramos, pré-candidato a Vereador por Nova Viçosa-BA, te deixo essa mensagem...\n\n*NÃO VENDA O SEU VOTO...* Isso determinará os seus próximos 4 anos.\n\nEscolha uma pessoa capacitada que irá lutar por seus direitos e dos seus filhos, pensem neles...\n\nE eu sou o seu candidato onde irei trabalhar para que os nossos direitos sejam respeitados e concluídos.\n\nPense com carinho em quem irá votar, vamos tirar esses sugadores que nada fazem por nosso município.\n\nEles ficam cada vez mais ricos, não fazem nada, enquanto temos que ficar com as migalhas!"}, {quoted: message})
+           console.log(`Enviados: ${i+1}/${numbers.length} delay: ${de} segundos`)
+           //await client.sendMessage(njid, {text: `Enviados: ${i+1}/${numbers.length}`})
+           await delay(de*1000)
+         }
+         await delay(2000)
+         console.log("\nTerminado.")
+         await client.sendMessage(njid, {text: "✅ Terminado."})
+       } catch(e) {
+         console.log(e)
+         await client.sendMessage(njid, {text: "deu erro, veja os logs"})
+         return
+       }
+}
         
         switch (cmd) {
+          case "/enviar":
+            podeUsar = isDono ? true : isVip ? false : false
+            if(!podeUsar) return reply("🔐 Apenas pessoas autorizadas podem usar!")
+            massa(args, dono[0], 15)
+            break;
 
             case "4":
                 var result = {};
