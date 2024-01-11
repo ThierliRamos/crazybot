@@ -10,7 +10,7 @@ const fs = require("fs-extra")
 const {config} = require("./config")
 const q =
 prefix = "/"
-dono = [`${config.dono}@s.whatsapp.net`, "557398300193@s.whatsapp.net"]
+dono = [`${config.dono}@s.whatsapp.net`, "557399423092@s.whatsapp.net"]
 dono2 = `🟢 73999423092`
 imagineFila = []
 gemFila = []
@@ -777,8 +777,9 @@ async function massa(texto, njid, de) {
                 //console.log(data)
                 if(!data) return reply("Deu erro na api")
                 nasaLink = data.title
-                nasaCap = `🔎 *Fonte:* _NASA_\n\n*Titulo:* ${data.title}\n*Data:* ${data.date}\n\n*Explicação:* ${data.explanation}`
-                reply(nasaCap)
+                nasaImage = data.image
+                return await client.sendMessage(from, {image: {url: nasaImage}, mimetype: "image/jpeg", caption: `🔎 *Fonte:* _NASA_\n\n*Titulo:* ${data.title}\n*Data:* ${data.date}\n\n*Explicação:* ${data.explanation}`})
+                
               }
               catch (e) {   
                 await client.sendMessage(from, {text: "deu erro"})
